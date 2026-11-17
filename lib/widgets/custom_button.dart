@@ -17,14 +17,14 @@ class CustomButton extends StatelessWidget {
       onPressed: onPressed,
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(10),
-        side: BorderSide(color: Color(0xff334155), width: 1),
+        side: BorderSide(color: Theme.of(context).dividerColor, width: 1),
       ),
       padding: EdgeInsets.symmetric(horizontal: 60, vertical: 10),
       color: color,
       child: Text(
         txt,
         style: TextStyle(
-          color: Colors.white,
+          color: Theme.of(context).primaryColorDark,
           fontSize: ScreenSize.width * 0.04,
         ),
       ),

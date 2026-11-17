@@ -15,9 +15,9 @@ class CustomLocationContainer extends StatelessWidget {
       width: ScreenSize.width * 0.45,
       padding: EdgeInsets.all(15),
       decoration: BoxDecoration(
-        color: Color(0xff1E293B),
+        color: Theme.of(context).cardColor,
         borderRadius: BorderRadius.circular(10),
-        border: Border.all(color: Color(0xff334155), width: 1),
+        border: Border.all(color: Theme.of(context).dividerColor, width: 1),
       ),
       child: Column(
         children: [
@@ -37,7 +37,7 @@ class CustomLocationContainer extends StatelessWidget {
           Text(
             place,
             style: TextStyle(
-              color: Colors.white,
+              color: Theme.of(context).primaryColorDark,
               fontSize: ScreenSize.height * 0.02,
             ),
           ),

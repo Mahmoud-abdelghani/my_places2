@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:image_picker/image_picker.dart';
+
 import 'package:my_places/core/screen_size.dart';
 import 'package:my_places/core/sqlite_helper.dart';
 import 'package:my_places/models/place_model.dart';
@@ -30,15 +31,16 @@ class _AddScreenState extends State<AddScreen> {
   Widget build(BuildContext context) {
     ScreenSize.init(context);
     return Scaffold(
-      backgroundColor: Color(0xff0F172A),
       appBar: AppBar(
-        shape: Border(bottom: BorderSide(color: Color(0xff334155))),
-        backgroundColor: Color(0xff1E293B),
-        iconTheme: IconThemeData(color: Colors.white),
+        shape: Border(
+          bottom: BorderSide(color: Theme.of(context).dividerColor),
+        ),
+
+        iconTheme: IconThemeData(color: Theme.of(context).primaryColorDark),
         title: Text(
           'Add New Place',
           style: TextStyle(
-            color: Colors.white,
+            color: Theme.of(context).primaryColorDark,
             fontSize: ScreenSize.height * 0.029,
             fontWeight: FontWeight.w400,
           ),
@@ -68,9 +70,9 @@ class _AddScreenState extends State<AddScreen> {
                   height: ScreenSize.height * 0.25,
                   width: ScreenSize.width,
                   decoration: BoxDecoration(
-                    color: Color(0xff1E293B),
+                    color: Theme.of(context).cardColor,
                     borderRadius: BorderRadius.circular(25),
-                    border: Border.all(color: Color(0xff334155)),
+                    border: Border.all(color: Theme.of(context).dividerColor),
                   ),
                   clipBehavior: Clip.antiAlias,
                   child: imagePath == null
@@ -136,20 +138,27 @@ class _AddScreenState extends State<AddScreen> {
               ),
               SizedBox(height: ScreenSize.height * 0.01),
               DropdownButtonFormField(
-                dropdownColor: Color(0xff0F172A),
+                dropdownColor: Theme.of(context).scaffoldBackgroundColor,
                 decoration: InputDecoration(
                   border: OutlineInputBorder(
-                    borderSide: BorderSide(color: Color(0xff1E293B)),
+                    borderSide: BorderSide(
+                      color: Theme.of(context).dividerColor,
+                    ),
                     borderRadius: BorderRadius.circular(10),
                   ),
                   filled: true,
-                  fillColor: Color(0xff1E293B4D),
+                  fillColor: Theme.of(context).secondaryHeaderColor,
                 ),
                 items: categories
                     .map(
                       (e) => DropdownMenuItem(
                         value: e,
-                        child: Text(e, style: TextStyle(color: Colors.white)),
+                        child: Text(
+                          e,
+                          style: TextStyle(
+                            color: Theme.of(context).primaryColorDark,
+                          ),
+                        ),
                       ),
                     )
                     .toList(),
@@ -173,20 +182,22 @@ class _AddScreenState extends State<AddScreen> {
                         setState(() {});
                       },
                       style: OutlinedButton.styleFrom(
-                        iconColor: Color(0xff14B8A6),
-                        backgroundColor: Color(0xff1E293B4D),
+                        iconColor: Theme.of(context).primaryColor,
+                        backgroundColor: Theme.of(context).secondaryHeaderColor,
                       ),
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
                           Icon(
                             Icons.location_on_outlined,
-                            color: Color(0xff14B8A6),
+                            color: Theme.of(context).primaryColor,
                           ),
                           SizedBox(width: ScreenSize.width * 0.02),
                           Text(
                             'Get Current Location',
-                            style: TextStyle(color: Colors.white),
+                            style: TextStyle(
+                              color: Theme.of(context).primaryColorDark,
+                            ),
                           ),
                         ],
                       ),
@@ -194,7 +205,7 @@ class _AddScreenState extends State<AddScreen> {
                   : Text(
                       'Latitude ${position!.latitude}, Longitude ${position!.longitude}',
                       style: TextStyle(
-                        color: Colors.white,
+                        color: Theme.of(context).primaryColorDark,
                         fontSize: ScreenSize.height * 0.02,
                       ),
                     ),

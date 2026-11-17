@@ -6,7 +6,6 @@ import 'package:my_places/core/screen_size.dart';
 import 'package:my_places/core/sqlite_helper.dart';
 import 'package:my_places/models/place_model.dart';
 import 'package:my_places/widgets/custom_button.dart';
-
 import 'package:my_places/widgets/custom_location_container.dart';
 
 class DetailsScreen extends StatelessWidget {
@@ -17,7 +16,6 @@ class DetailsScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     ScreenSize.init(context);
     return Scaffold(
-      backgroundColor: Color(0xff0F172A),
       body: SingleChildScrollView(
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -37,7 +35,7 @@ class DetailsScreen extends StatelessWidget {
                   Text(
                     place.title,
                     style: TextStyle(
-                      color: Colors.white,
+                      color: Theme.of(context).primaryColorDark,
                       fontSize: ScreenSize.height * 0.032,
                     ),
                   ),
@@ -45,7 +43,7 @@ class DetailsScreen extends StatelessWidget {
                   Text(
                     'Description',
                     style: TextStyle(
-                      color: Colors.white,
+                      color: Theme.of(context).primaryColorDark,
                       fontSize: ScreenSize.height * 0.025,
                     ),
                   ),
@@ -61,7 +59,7 @@ class DetailsScreen extends StatelessWidget {
                   Text(
                     'Location',
                     style: TextStyle(
-                      color: Colors.white,
+                      color: Theme.of(context).primaryColorDark,
                       fontSize: ScreenSize.height * 0.025,
                     ),
                   ),
@@ -83,17 +81,22 @@ class DetailsScreen extends StatelessWidget {
                   OutlinedButton(
                     onPressed: () async {},
                     style: OutlinedButton.styleFrom(
-                      iconColor: Colors.white,
-                      backgroundColor: Color(0x4D1E293B),
+                      iconColor: Theme.of(context).primaryColorDark,
+                      backgroundColor: Theme.of(context).secondaryHeaderColor,
                     ),
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        Icon(Icons.open_in_new, color: Colors.white),
+                        Icon(
+                          Icons.open_in_new,
+                          color: Theme.of(context).primaryColorDark,
+                        ),
                         SizedBox(width: ScreenSize.width * 0.02),
                         Text(
                           'Open in Maps',
-                          style: TextStyle(color: Colors.white),
+                          style: TextStyle(
+                            color: Theme.of(context).primaryColorDark,
+                          ),
                         ),
                       ],
                     ),
@@ -101,11 +104,16 @@ class DetailsScreen extends StatelessWidget {
                   SizedBox(height: ScreenSize.height * 0.02),
                   Row(
                     children: [
-                      Icon(Icons.calendar_month, color: Colors.white),
+                      Icon(
+                        Icons.calendar_month,
+                        color: Theme.of(context).primaryColorDark,
+                      ),
                       SizedBox(width: ScreenSize.width * 0.02),
                       Text(
                         place.date.toString(),
-                        style: TextStyle(color: Colors.white),
+                        style: TextStyle(
+                          color: Theme.of(context).primaryColorDark,
+                        ),
                       ),
                     ],
                   ),

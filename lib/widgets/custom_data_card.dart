@@ -32,7 +32,7 @@ class CustomDataCard extends StatelessWidget {
           borderRadius: BorderRadius.circular(25),
           side: BorderSide(color: Theme.of(context).dividerColor, width: 1),
         ),
-        color: Color(0xff1E293B),
+        color: Theme.of(context).cardColor,
         clipBehavior: Clip.antiAlias,
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -77,7 +77,7 @@ class CustomDataCard extends StatelessWidget {
                   Text(
                     title,
                     style: TextStyle(
-                      color: Colors.white,
+                      color: Theme.of(context).primaryColorDark,
                       fontSize: ScreenSize.height * 0.029,
                     ),
                   ),

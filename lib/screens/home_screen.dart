@@ -1,15 +1,24 @@
 import 'package:flutter/material.dart';
+
 import 'package:my_places/core/screen_size.dart';
 import 'package:my_places/core/sqlite_helper.dart';
+import 'package:my_places/l10n/app_localizations.dart';
 import 'package:my_places/models/place_model.dart';
 import 'package:my_places/screens/add_screen.dart';
 import 'package:my_places/screens/details_screen.dart';
+import 'package:my_places/screens/settings_screen.dart';
 import 'package:my_places/widgets/category_containder.dart';
 import 'package:my_places/widgets/custom_data_card.dart';
 import 'package:my_places/widgets/cutom_button.dart';
 
 class HomeScreen extends StatefulWidget {
-  const HomeScreen({super.key});
+  const HomeScreen({
+    super.key,
+    required this.toggleTheme,
+    required this.onSelected,
+  });
+  final VoidCallback toggleTheme;
+  final Function(String?)? onSelected;
 
   @override
   State<HomeScreen> createState() => _HomeScreenState();
@@ -24,7 +33,6 @@ class _HomeScreenState extends State<HomeScreen> {
     'hotel',
     'Other',
   ];
-  int selectedCategoryIndex = 0;
   List<PlaceModel> places = [];
 
   Future<void> _fetchPlaces() async {
@@ -38,9 +46,9 @@ class _HomeScreenState extends State<HomeScreen> {
     super.initState();
   }
 
+  int selectedCategoryIndex = 0;
   @override
   Widget build(BuildContext context) {
-    ScreenSize.init(context);
     ScreenSize.init(context);
     List<PlaceModel> filteredPlaces = selectedCategoryIndex != 0
         ? places
@@ -60,10 +68,10 @@ class _HomeScreenState extends State<HomeScreen> {
           await _fetchPlaces();
         },
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(50)),
-        backgroundColor: Color(0xff14B8A6),
+        backgroundColor: Theme.of(context).primaryColor,
         child: Icon(Icons.add, color: Colors.white),
       ),
-      backgroundColor: Color(0xff0F172A),
+
       body: CustomScrollView(
         slivers: [
           SliverToBoxAdapter(
@@ -75,8 +83,10 @@ class _HomeScreenState extends State<HomeScreen> {
               ),
               width: ScreenSize.width,
               decoration: BoxDecoration(
-                color: Color(0xff1E293B),
-                border: Border(bottom: BorderSide(color: Color(0xff334155))),
+                color: Theme.of(context).cardColor,
+                border: Border(
+                  bottom: BorderSide(color: Theme.of(context).dividerColor),
+                ),
               ),
               child: Column(
                 children: [
@@ -84,25 +94,37 @@ class _HomeScreenState extends State<HomeScreen> {
                   Row(
                     children: [
                       Text(
-                        'My Places',
+                        AppLocalizations.of(context).appTitle,
                         style: TextStyle(
-                          color: Colors.white,
+                          color: Theme.of(context).primaryColorDark,
                           fontSize: ScreenSize.height * 0.03,
                         ),
                       ),
                       Spacer(),
                       IconButton(
-                        onPressed: () {},
+                        onPressed: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => SettingsScreen(
+                                onSelected: widget.onSelected,
+                                onChanged: (bool p1) {
+                                  widget.toggleTheme();
+                                },
+                              ),
+                            ),
+                          );
+                        },
                         icon: Icon(
                           Icons.settings_outlined,
-                          color: Colors.white,
+                          color: Theme.of(context).primaryColorDark,
                         ),
                       ),
                       IconButton(
                         onPressed: () {},
                         icon: Icon(
                           Icons.light_mode_outlined,
-                          color: Colors.white,
+                          color: Theme.of(context).primaryColorDark,
                         ),
                       ),
                     ],
@@ -147,7 +169,7 @@ class _HomeScreenState extends State<HomeScreen> {
             ),
           ),
           SliverToBoxAdapter(child: SizedBox(height: ScreenSize.height * 0.03)),
-          filteredPlaces.isEmpty
+          places.isEmpty
               ? SliverToBoxAdapter(
                   child: Padding(
                     padding: EdgeInsets.symmetric(
