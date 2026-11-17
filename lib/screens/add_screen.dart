@@ -4,6 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:my_places/core/screen_size.dart';
+import 'package:my_places/core/sqlite_helper.dart';
+import 'package:my_places/models/place_model.dart';
 import 'package:my_places/widgets/custom_field.dart';
 import 'package:my_places/widgets/cutom_button.dart';
 
@@ -199,7 +201,36 @@ class _AddScreenState extends State<AddScreen> {
               SizedBox(height: ScreenSize.height * 0.02),
               Align(
                 alignment: Alignment.bottomCenter,
-                child: CutomButton(onPressed: () {}, txt: 'Save Place'),
+                child: CutomButton(
+                  onPressed: () async {
+                    if (nameFormKey.currentState!.validate() &&
+                        descriptionFormKey.currentState!.validate() &&
+                        selectedCat != null &&
+                        imagePath != null &&
+                        position != null) {
+                      await SqliteHelper.insertPlace(
+                        PlaceModel(
+                          title: nameController.text,
+                          description: descriptionController.text,
+                          imagePath: imagePath!,
+                          latitude: position!.latitude,
+                          longitude: position!.longitude,
+                          date: DateTime.now(),
+                          category: selectedCat!,
+                        ),
+                      );
+                      Navigator.pop(context);
+                    } else {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(
+                          content: Text('Please fill all the fields'),
+                          backgroundColor: Colors.red,
+                        ),
+                      );
+                    }
+                  },
+                  txt: 'Save Place',
+                ),
               ),
               SizedBox(height: ScreenSize.height * 0.04),
             ],

@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:my_places/core/screen_size.dart';
+import 'package:my_places/core/sqlite_helper.dart';
+import 'package:my_places/models/place_model.dart';
 import 'package:my_places/screens/add_screen.dart';
 import 'package:my_places/widgets/category_containder.dart';
+import 'package:my_places/widgets/custom_data_card.dart';
 import 'package:my_places/widgets/cutom_button.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -21,16 +24,30 @@ class _HomeScreenState extends State<HomeScreen> {
     'Other',
   ];
   int selectedCategoryIndex = 0;
+  List<PlaceModel> places = [];
+
+  Future<void> _fetchPlaces() async {
+    places = await SqliteHelper.getPlaces();
+    setState(() {});
+  }
+
+  @override
+  void initState() {
+    _fetchPlaces();
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     ScreenSize.init(context);
     return Scaffold(
       floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          Navigator.push(
+        onPressed: () async {
+          await Navigator.push(
             context,
             MaterialPageRoute(builder: (context) => AddScreen()),
           );
+          await _fetchPlaces();
         },
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(50)),
         backgroundColor: Color(0xff14B8A6),
@@ -119,51 +136,70 @@ class _HomeScreenState extends State<HomeScreen> {
               ),
             ),
           ),
-
-          SliverToBoxAdapter(
-            child: Padding(
-              padding: EdgeInsets.symmetric(
-                horizontal: ScreenSize.width * 0.02,
-              ),
-              child: Column(
-                children: [
-                  SizedBox(height: ScreenSize.height * 0.15),
-                  CircleAvatar(
-                    radius: ScreenSize.height * 0.08,
-                    backgroundImage: AssetImage('assets/Container.png'),
-                    backgroundColor: Colors.transparent,
-                  ),
-                  SizedBox(height: ScreenSize.height * 0.015),
-                  Text(
-                    'No places saved yet',
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontSize: ScreenSize.height * 0.025,
+          SliverToBoxAdapter(child: SizedBox(height: ScreenSize.height * 0.03)),
+          places.isEmpty
+              ? SliverToBoxAdapter(
+                  child: Padding(
+                    padding: EdgeInsets.symmetric(
+                      horizontal: ScreenSize.width * 0.03,
+                    ),
+                    child: Column(
+                      children: [
+                        SizedBox(height: ScreenSize.height * 0.15),
+                        CircleAvatar(
+                          radius: ScreenSize.height * 0.08,
+                          backgroundImage: AssetImage('assets/Container.png'),
+                          backgroundColor: Colors.transparent,
+                        ),
+                        SizedBox(height: ScreenSize.height * 0.015),
+                        Text(
+                          'No places saved yet',
+                          style: TextStyle(
+                            color: Theme.of(context).primaryColorDark,
+                            fontSize: ScreenSize.height * 0.025,
+                          ),
+                        ),
+                        SizedBox(height: ScreenSize.height * 0.015),
+                        Text(
+                          'Save photos, notes, and locations of your favorite spots.',
+                          style: TextStyle(
+                            color: Colors.grey,
+                            fontSize: ScreenSize.height * 0.02,
+                          ),
+                          textAlign: TextAlign.center,
+                        ),
+                        SizedBox(height: ScreenSize.height * 0.015),
+                        CutomButton(
+                          onPressed: () async {
+                            await Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => AddScreen(),
+                              ),
+                            );
+                            await _fetchPlaces();
+                          },
+                          txt: 'Add your first place',
+                        ),
+                      ],
                     ),
                   ),
-                  SizedBox(height: ScreenSize.height * 0.015),
-                  Text(
-                    'Save photos, notes, and locations of your favorite spots.',
-                    style: TextStyle(
-                      color: Colors.grey,
-                      fontSize: ScreenSize.height * 0.02,
-                    ),
-                    textAlign: TextAlign.center,
+                )
+              : SliverList.separated(
+                  itemBuilder: (context, index) => CustomDataCard(
+                    title: places[index].title,
+                    description: places[index].description,
+                    imagePath: places[index].imagePath,
+                    latitude: places[index].latitude,
+                    longitude: places[index].longitude,
+                    category: places[index].category,
+                    date: places[index].date,
+                    onTap: () async {},
                   ),
-                  SizedBox(height: ScreenSize.height * 0.015),
-                  CutomButton(
-                    onPressed: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(builder: (context) => AddScreen()),
-                      );
-                    },
-                    txt: 'Add your first place',
-                  ),
-                ],
-              ),
-            ),
-          ),
+                  separatorBuilder: (context, index) =>
+                      SizedBox(height: ScreenSize.height * 0.02),
+                  itemCount: places.length,
+                ),
         ],
       ),
     );
