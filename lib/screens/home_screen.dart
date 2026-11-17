@@ -3,6 +3,7 @@ import 'package:my_places/core/screen_size.dart';
 import 'package:my_places/core/sqlite_helper.dart';
 import 'package:my_places/models/place_model.dart';
 import 'package:my_places/screens/add_screen.dart';
+import 'package:my_places/screens/details_screen.dart';
 import 'package:my_places/widgets/category_containder.dart';
 import 'package:my_places/widgets/custom_data_card.dart';
 import 'package:my_places/widgets/cutom_button.dart';
@@ -40,6 +41,15 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     ScreenSize.init(context);
+    ScreenSize.init(context);
+    List<PlaceModel> filteredPlaces = selectedCategoryIndex != 0
+        ? places
+              .where(
+                (element) =>
+                    element.category == categories[selectedCategoryIndex],
+              )
+              .toList()
+        : places;
     return Scaffold(
       floatingActionButton: FloatingActionButton(
         onPressed: () async {
@@ -137,7 +147,7 @@ class _HomeScreenState extends State<HomeScreen> {
             ),
           ),
           SliverToBoxAdapter(child: SizedBox(height: ScreenSize.height * 0.03)),
-          places.isEmpty
+          filteredPlaces.isEmpty
               ? SliverToBoxAdapter(
                   child: Padding(
                     padding: EdgeInsets.symmetric(
@@ -187,18 +197,27 @@ class _HomeScreenState extends State<HomeScreen> {
                 )
               : SliverList.separated(
                   itemBuilder: (context, index) => CustomDataCard(
-                    title: places[index].title,
-                    description: places[index].description,
-                    imagePath: places[index].imagePath,
-                    latitude: places[index].latitude,
-                    longitude: places[index].longitude,
-                    category: places[index].category,
-                    date: places[index].date,
-                    onTap: () async {},
+                    title: filteredPlaces[index].title,
+                    description: filteredPlaces[index].description,
+                    imagePath: filteredPlaces[index].imagePath,
+                    latitude: filteredPlaces[index].latitude,
+                    longitude: filteredPlaces[index].longitude,
+                    category: filteredPlaces[index].category,
+                    date: filteredPlaces[index].date,
+                    onTap: () async {
+                      await Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) =>
+                              DetailsScreen(place: filteredPlaces[index]),
+                        ),
+                      );
+                      await _fetchPlaces();
+                    },
                   ),
                   separatorBuilder: (context, index) =>
                       SizedBox(height: ScreenSize.height * 0.02),
-                  itemCount: places.length,
+                  itemCount: filteredPlaces.length,
                 ),
         ],
       ),
